@@ -1,0 +1,39 @@
+# config/grafana-datasources.yaml
+# Auto-provisioned data sources for Grafana
+
+apiVersion: 1
+
+datasources:
+  - name: Prometheus-test
+    type: prometheus
+    access: proxy
+    url: http://localhost:9090
+    isDefault: true
+
+  - name: Loki-test
+    type: loki
+    access: proxy
+    url: http://localhost:3100
+    isDefault: false
+    jsonData:
+      derivedFields:
+        - name: TraceID
+          datasourceUid: tempo
+          matcherRegex: "traceID=(\\w+)"
+          url: "$${__value.raw}"
+
+  - name: Tempo
+    type: tempo
+    access: proxy
+    url: http://localhost:3200
+    isDefault: false
+    jsonData:
+      tracesToLogsV2:
+        datasourceUid: loki
+        filterByTraceID: true
+      tracesToMetrics:
+        datasourceUid: prometheus
+      nodeGraph:
+        enabled: true
+      serviceMap:
+        datasourceUid: prometheus
