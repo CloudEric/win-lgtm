@@ -15,8 +15,9 @@ The LGTM stack includes the following containers:
 - Grafana for visualization
 - Tempo for trace storage
 - Prometheus for metric storage
+- cadvisor for container metrics
 
-While, LGTM implies using Mimir for metrics, it's based on Prometheus and is more widely supported.
+While, LGTM implies using Mimir for metrics, Prometheus is more widely supported.
 
 
 ### Storage requirements for production
