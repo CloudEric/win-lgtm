@@ -7,13 +7,13 @@ datasources:
   - name: Prometheus-test
     type: prometheus
     access: proxy
-    url: http://localhost:9090
+    url: http://prometheus:9090
     isDefault: true
 
   - name: Loki-test
     type: loki
     access: proxy
-    url: http://localhost:3100
+    url: http://loki:3100
     isDefault: false
     jsonData:
       derivedFields:
@@ -25,7 +25,7 @@ datasources:
   - name: Tempo-test
     type: tempo
     access: proxy
-    url: http://localhost:3200
+    url: http://tempo:3200
     isDefault: false
     jsonData:
       tracesToLogsV2:

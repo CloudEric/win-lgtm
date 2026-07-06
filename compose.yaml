@@ -32,6 +32,8 @@ services:
       - --config.file=/etc/prometheus/prometheus.yaml
       - --storage.tsdb.path=/prometheus
       - --storage.tsdb.retention.time=7d
+    depends_on:
+      - cadvisor
 
   loki:
     image: grafana/loki:latest
@@ -56,6 +58,21 @@ services:
       - .\tempo\data:/var/tempo
       - .\tempo\tempo.yaml:/etc/tempo/config.yaml
     command: ["-config.file=/etc/tempo/config.yaml"]
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    pull_policy: always
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+    privileged: true
+
 
 
 
