@@ -16,6 +16,8 @@ The LGTM stack includes the following containers:
 - Tempo for trace storage
 - Prometheus for metric storage
 - cadvisor for container metrics
+- k6 for generating test traces
+- alloy for sending k6 traces to Tempo
 
 While, LGTM implies using Mimir for metrics, Prometheus is more widely supported.
 

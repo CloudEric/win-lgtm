@@ -14,8 +14,9 @@ services:
       - 3000:3000/tcp
     volumes:
       - .\grafana\data:/var/lib/grafana
-      - .\grafana\provisioning\datasources:/etc/grafana/provisioning/datasources
-      - .\grafana\provisioning\dashboards:/etc/grafana/provisioning/dashboards
+      - .\grafana\provisioning\datasources\datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - .\grafana\provisioning\dashboards\dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - .\grafana\provisioning\dashboards:/var/lib/grafana/dashboards
     depends_on:
       - prometheus
       - loki
@@ -59,11 +60,15 @@ services:
     pull_policy: always
     restart: unless-stopped
     ports:
-      - "3200:3200"
+      - "3200:3200" # Tempo
+      - "4317:4317" # Tempo OTLP GRPC
+      - "4318:4318" # Tempo OTLP HTTP
     volumes:
       - .\tempo\data:/var/tempo
-      - .\tempo\tempo.yaml:/etc/tempo/config.yaml
-    command: ["-config.file=/etc/tempo/config.yaml"]
+      - .\tempo\tempo.yaml:/etc/tempo.yaml
+    command: "-target=all -config.file=/etc/tempo.yaml"
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://alloy:4318
 
 # Capture container metrics for prometheous to scrape
   cadvisor:
@@ -80,7 +85,38 @@ services:
       - /var/lib/docker:/var/lib/docker:ro
     privileged: true
 
+# Testing pipeline for traces
+  k6-tracing:
+    image: ghcr.io/grafana/xk6-client-tracing:latest
+    container_name: k6
+    pull_policy: always
+    restart: unless-stopped
+    environment:
+      - ENDPOINT=alloy:4317
+    depends_on:
+      - tempo
+      - alloy
 
+# Sends K6 traces to Tempo
+  alloy:
+    image: grafana/alloy:latest
+    container_name: alloy
+    pull_policy: always
+    restart: unless-stopped
+    volumes:
+      - .\alloy\config.alloy:/etc/alloy/config.alloy
+    command:
+      - run
+      - /etc/alloy/config.alloy
+      - --storage.path=/var/lib/alloy/data
+      - --server.http.listen-addr=0.0.0.0:12345
+    environment:
+      - ALLOY_OTLP_UPSTREAM=tempo:4317
+    ports:
+      - "12345:12345"
+      - "4319:4317"
+    depends_on:
+      - tempo
 
 
 
