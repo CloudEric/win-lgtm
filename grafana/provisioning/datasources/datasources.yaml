@@ -22,7 +22,7 @@ datasources:
           matcherRegex: "traceID=(\\w+)"
           url: "$${__value.raw}"
 
-  - name: Tempo
+  - name: Tempo-test
     type: tempo
     access: proxy
     url: http://localhost:3200
