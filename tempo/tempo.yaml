@@ -4,6 +4,12 @@ server:
   http_listen_port: 3200
   log_level: info
 
+# Security configuration - Uncommend the lines below and specify the certificate to enable encryption
+#
+#http_tls_config:
+#  cert_file: /path/to/server.crt
+#  key_file: /path/to/server.key
+
 distributor:
   receivers:
     otlp:

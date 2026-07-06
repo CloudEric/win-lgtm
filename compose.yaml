@@ -50,7 +50,7 @@ services:
       - "3100:3100"
     volumes:
       - .\loki\data:/loki
-      - .\loki\loki-config.yaml:/etc/loki/config.yaml
+      - .\loki\loki.yaml:/etc/loki/config.yaml
     command: -config.file=/etc/loki/config.yaml
 
 # Trace database
