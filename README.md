@@ -16,10 +16,10 @@ The LGTM stack includes 5 containers:
 - Prometheus for metric storage
 - Cadvisor for container metrics
 
-Cadvisor captures performance metrics of other containers. Prometheus has a scrape config to automatically capture all of the metrics. A dashboard is included in this repo to observe the containers right out of the box.
+Cadvisor captures performance metrics of other containers. Prometheus has a scrape config to automatically capture cadvisor. A dashboard is included in this repo to observe the containers right out of the box!
 
 ### Deploy this stack
 
 There are two steps to deploy win-lgtm from a powershell prompt:
-1 git clone https://github.com/CloudEric/win-lgtm
-2 docker compose up
+1. git clone https://github.com/CloudEric/win-lgtm
+2. docker compose up
